@@ -94,7 +94,7 @@ void drawAxes() {
 }
 
 void init(void) {
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glClearDepth(1.0);
 	glEnable(GL_DEPTH_TEST);
 
@@ -104,105 +104,186 @@ void init(void) {
 	loadTextures();
 }
 
-void drawHandleBar() {
-
-	glPushMatrix();
+void drawWheelSpokes() {
+	double theta = 45;
+	int n = 6;
 
 	GLUquadric* quad = gluNewQuadric();
 
-	// Horizontal bar
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	gluCylinder(quad, 0.5, 0.5, 12.0, 20, 10);
-
-	// Other two parts
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glTranslatef(0.0f, 0.0f, 0.0f);
-	gluCylinder(quad, 0.6, 0.6, 2.0, 20, 10);
-
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glTranslatef(0.0f, 0.0f, 10.0f);
-	gluCylinder(quad, 0.6, 0.6, 2.0, 20, 10);
+	for (int i = 0; i <= 360; i += 45) {
+		glVertex2f(0, 0);
+		glPushMatrix();
+		glRotatef(i, 1, 0, 0);
+		gluCylinder(quad, 0.05, 0.05, 0.95, 100, 100);
+		glPopMatrix();
+	}
 
 	gluDeleteQuadric(quad);
 
-	glPushMatrix();
+
 }
 
-void forkAndSeatStay() {
-
+void drawTorus() {
 	glPushMatrix();
+	glRotatef(90, 0, 1, 0);
+	glutSolidTorus(0.15, 1, 32, 32);
+	glPopMatrix();
 
 	GLUquadric* quad = gluNewQuadric();
-
-	// Top vertical bar
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(0.0f, 0.0f, -4.0f);
-	glRotatef(90, 1.0, 0.0, 0.2);
-	gluCylinder(quad, 0.5, 0.5, 10.0, 20, 10);
-
-	// Below verical bars
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(0.0f, 2.0f, 10.0f);
-	gluCylinder(quad, 0.5, 0.5, 8.0, 20, 10);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(0.0f, -4.0f, 0.0f);
-	gluCylinder(quad, 0.5, 0.5, 8.0, 20, 10);
-
-	// Middle horizontal bar
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(0.0f, 4.0f, 0.0f);
-	glRotatef(90, 1.0, .0, 0.0);
-	gluCylinder(quad, 0.5, 0.5, 4.0, 20, 10);
-
-	gluDeleteQuadric(quad);
-
 	glPushMatrix();
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(0, 0, -0.08);
+	gluCylinder(quad, 0.2, 0.2, 0.2, 100, 100);
+	glPopMatrix();
+	gluDeleteQuadric(quad);
 }
 
 void drawWheel() {
 
-	glPushMatrix();
+	glColor3f(0, 0, 0);
+	drawTorus();
 
+	glColor3f(0.9, 0.9, 0.9);
+	drawWheelSpokes();
+}
+
+void drawTube() {
 	GLUquadric* quad = gluNewQuadric();
-
-	// Draw tire
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glTranslatef(6.0f, -7.0f, 0.0f);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	glutSolidTorus(0.5, 5.0, 30.0, 30.0);
-
+	gluCylinder(quad, 0.05, 0.05, 2, 100, 100);
 	gluDeleteQuadric(quad);
+}
 
+void drawTubes() {
+
+	glColor3f(0.9, 0.4, 0.5);
+	drawTube();
+
+	glPushMatrix();
+	glRotatef(65, 1, 0, 0);
+	glScalef(1, 1, 1.75);
+	drawTube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(-80, 1, 0, 0);
+	glScalef(1, 1, 1.6);
+	glTranslatef(0, -2, -1.75);
+	drawTube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glScalef(1, 1, 2);
+	glTranslatef(0, -3.25, 0.75);
+	drawTube();
 	glPopMatrix();
 }
 
-void drawFrame() {
+void drawSeatTray() {
+	glColor3f(0.8, 0.7, 0.6);
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+	drawTube();
+	glPopMatrix();
 
 	glPushMatrix();
-
-	GLUquadric* quad = gluNewQuadric();
-
-	// Middle horizontal bar
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glTranslatef(-8.0f, -2.0f, 2.0f);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	gluCylinder(quad, 0.5, 0.5, 8.0, 20, 10);
-
-	gluDeleteQuadric(quad);
-
+	glRotatef(90, 0, 1, 0);
+	glScalef(0.5, 0.5, 0.2);
+	glTranslatef(0, -4, -1);
+	drawTube();
 	glPopMatrix();
+
+	double scale = 0.75;
+	double gap = 0.25;
+	double height = 2.70;
+
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+	glScalef(scale, scale, scale);
+	glTranslatef(gap, 0, height);
+	drawTube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(90, 1, 0, 0);
+	glScalef(scale, scale, scale);
+	glTranslatef(-gap, 0, height);
+	drawTube();
+	glPopMatrix();
+}
+
+void drawHandleBar() {
+
+	glColor3f(0.0, 0.0, 1.0);
+	glPushMatrix();
+	glScalef(1.5, 1.5, 1);
+	drawTube();
+	glPopMatrix();
+
+	glColor3f(0.0, 1.0, 0.0);
+	glPushMatrix();
+	glScalef(3, 3, 0.5);
+	drawTube();
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glColor3f(0.0, 1.0, 0.0);
+	glTranslatef(0, 0, 2);
+	glScalef(3, 3, 0.5);
+	drawTube();
+	glPopMatrix();
+
+}
+
+void drawSeat() {
+	GLUquadric* quad = gluNewQuadric();
+	glColor3f(0.1, 0.1, 0.5);
+	gluSphere(quad, 1, 100, 100);
 }
 
 void drawBicycle() {
-
-	drawHandleBar();
-	forkAndSeatStay();
-	drawFrame();
+	glPushMatrix();
+	glTranslatef(0, -3, -1);
 	drawWheel();
+	glPopMatrix();
 
+	glPushMatrix();
+	glRotatef(20, 1, 0, 0);
+	drawSeatTray();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, -3, 4);
+	drawWheel();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, -0.5, -0.25);
+	glScalef(0.75, 0.75, 0.75);
+	drawTubes();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0, -0.5, 1.45);
+	glRotatef(-45, 1, 0, 0);
+	glScalef(1, 1, 1);
+	drawSeatTray();
+	glPopMatrix();
+
+
+	glPushMatrix();
+	glRotatef(90, 0, 1, 0);
+	glTranslatef(0, 0, -1.5);
+	drawHandleBar();
+	glPopMatrix();
+
+	glPushMatrix();
+	glScalef(0.3, 0.2, 0.4);
+	glTranslatef(0, -2, 3.25);
+	drawSeat();
+	glPopMatrix();
 }
+
 
 //Set Properties of light sources and materials
 void setLightingandShading() {
@@ -268,13 +349,8 @@ void display(void) {
 	if (axesOn == 1)
 		drawAxes();
 
-	glPushMatrix();
-	glScalef(0.5f, 0.5f, 0.5f);
-	glTranslatef(-5.0f, 0.0f, 0.0f);
+	
 	drawBicycle();
-	glPopMatrix();
-
-	//setLightingandShading();
 
 	glPopMatrix();
 	glutSwapBuffers();
